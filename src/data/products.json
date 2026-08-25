@@ -1,0 +1,35 @@
+[
+  {
+    "id": 1,
+    "title": "Teclado Mecánico RGB",
+    "description": "Teclado mecánico con switches cherry MX brown, retroiluminación RGB y layout en español.",
+    "code": "TEC-001",
+    "price": 12500,
+    "status": true,
+    "stock": 25,
+    "category": "Periféricos",
+    "thumbnails": []
+  },
+  {
+    "id": 2,
+    "title": "Monitor Curvo 27\"",
+    "description": "Monitor curvo gaming de 27 pulgadas, resolución QHD 144Hz y tiempo de respuesta de 1ms.",
+    "code": "MON-002",
+    "price": 45000,
+    "status": true,
+    "stock": 10,
+    "category": "Pantallas",
+    "thumbnails": []
+  },
+  {
+    "id": 3,
+    "title": "Auriculares Gamer Pro",
+    "description": "Auriculares con sonido envolvente 7.1 virtual, micrófono con cancelación de ruido y conexión USB.",
+    "code": "AUR-003",
+    "price": 8500,
+    "status": true,
+    "stock": 15,
+    "category": "Periféricos",
+    "thumbnails": []
+  }
+]

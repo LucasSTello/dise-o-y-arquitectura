@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{title}}</title>
+  <!-- Google Fonts for modern typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <!-- Header / Navigation Bar -->
+  <header class="navbar">
+    <div class="nav-container">
+      <a href="/" class="brand-logo">
+        <span class="logo-icon">▲</span> Antigravity Store
+      </a>
+      <nav class="nav-links">
+        <a href="/" class="nav-item">Inicio</a>
+        <a href="/products" class="nav-item">Catálogo Paginado</a>
+        <a href="/realtimeproducts" class="nav-item">Panel Real-Time</a>
+        <a href="#" class="nav-item active-btn" id="navbar-cart-link">🛒 Mi Carrito</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Page Content -->
+  <main class="container">
+    {{{body}}}
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-container">
+      <p>&copy; 2026 Antigravity Store - Diplomatura de Desarrollo Backend. Todos los derechos reservados.</p>
+    </div>
+  </footer>
+
+  <!-- Script to ensure Cart Link is loaded on all views -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const cartId = localStorage.getItem('cartId');
+      if (cartId) {
+        const cartLink = document.getElementById('navbar-cart-link');
+        if (cartLink) {
+          cartLink.setAttribute('href', `/carts/${cartId}`);
+        }
+      }
+    });
+  </script>
+</body>
+</html>

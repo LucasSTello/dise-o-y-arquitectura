@@ -1,0 +1,113 @@
+<section class="page-header">
+  <h1>Panel en Tiempo Real</h1>
+  <p class="subtitle">Agrega, elimina y gestiona tus productos en vivo. Cambios sincronizados entre clientes conectados de inmediato.</p>
+</section>
+
+<div class="split-layout">
+  <!-- Left Side: Live Product List -->
+  <section class="products-section">
+    <div class="section-title-bar">
+      <h2>Listado de Productos (Vivo)</h2>
+      <span class="status-indicator connected" id="connection-status">Conectando...</span>
+    </div>
+    
+    <!-- This container will be dynamically updated by client-side socket.io -->
+    <div class="products-grid" id="products-container">
+      {{#if products.length}}
+        {{#each products}}
+          <article class="product-card" data-id="{{this._id}}">
+            <div class="card-header">
+              <span class="category-badge">{{this.category}}</span>
+              <span class="product-id">ID: #{{this._id}}</span>
+            </div>
+            <div class="card-body">
+              <h3 class="product-title">{{this.title}}</h3>
+              <p class="product-description">{{this.description}}</p>
+              <div class="product-meta">
+                <span class="meta-item"><strong>Código:</strong> {{this.code}}</span>
+                <span class="meta-item"><strong>Stock:</strong> {{this.stock}} u.</span>
+              </div>
+            </div>
+            <div class="card-footer">
+              <span class="product-price">${{this.price}}</span>
+            </div>
+          </article>
+        {{/each}}
+      {{else}}
+        <div class="empty-state">
+          <span class="empty-icon">📦</span>
+          <h3>No hay productos disponibles</h3>
+          <p>No se encontraron productos registrados en el sistema en este momento.</p>
+        </div>
+      {{/if}}
+    </div>
+  </section>
+
+  <!-- Right Side: Forms (Add & Delete) -->
+  <aside class="sidebar-forms">
+    <!-- Add Product Glassmorphic Card -->
+    <div class="form-card">
+      <h3>Crear Nuevo Producto</h3>
+      <form id="add-product-form" class="panel-form">
+        <div class="form-group">
+          <label for="title">Título del Producto</label>
+          <input type="text" id="title" placeholder="Ej. Teclado Mecánico RGB" required>
+        </div>
+
+        <div class="form-group">
+          <label for="description">Descripción</label>
+          <textarea id="description" rows="3" placeholder="Detalla las características del producto..." required></textarea>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group half-width">
+            <label for="code">Código Único</label>
+            <input type="text" id="code" placeholder="Ej. TEC-001" required>
+          </div>
+          <div class="form-group half-width">
+            <label for="category">Categoría</label>
+            <input type="text" id="category" placeholder="Ej. Periféricos" required>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group half-width">
+            <label for="price">Precio ($)</label>
+            <input type="number" id="price" min="0" placeholder="Ej. 12500" required>
+          </div>
+          <div class="form-group half-width">
+            <label for="stock">Stock Disponible</label>
+            <input type="number" id="stock" min="0" placeholder="Ej. 25" required>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">
+          <span class="btn-icon">＋</span> Guardar Producto
+        </button>
+      </form>
+      <div id="add-form-feedback" class="form-feedback"></div>
+    </div>
+
+    <!-- Delete Product Glassmorphic Card -->
+    <div class="form-card delete-card">
+      <h3>Eliminar Producto por ID</h3>
+      <p class="form-warning-text">Precaución: Esta acción removerá de forma permanente el producto.</p>
+      <form id="delete-product-form" class="panel-form">
+        <div class="form-group">
+          <label for="delete-id">ID del Producto (Mongoose ID)</label>
+          <input type="text" id="delete-id" placeholder="Ej. 65f29db..." required>
+        </div>
+        
+        <button type="submit" class="btn btn-danger">
+          <span class="btn-icon">🗑</span> Eliminar Producto
+        </button>
+      </form>
+      <div id="delete-form-feedback" class="form-feedback"></div>
+    </div>
+  </aside>
+</div>
+
+<!-- Socket.io connection library (provided dynamically by Socket.io engine) -->
+<script src="/socket.io/socket.io.js"></script>
+<!-- Client-side javascript file for live updates -->
+<script src="/js/realtime.js"></script>

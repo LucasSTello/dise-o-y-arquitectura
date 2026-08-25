@@ -1,0 +1,115 @@
+<section class="page-header">
+  <h1>Tu Carrito de Compra</h1>
+  <p class="subtitle">Gestiona y revisa los artículos seleccionados antes de finalizar tu orden.</p>
+</section>
+
+{{#if error}}
+  <div class="alert alert-error">
+    <p>{{error}}</p>
+  </div>
+{{/if}}
+
+<div class="cart-container">
+  {{#if hasProducts}}
+    <div class="cart-grid">
+      <!-- Product Details Table / List -->
+      <div class="cart-items-section">
+        {{#each products}}
+          {{#if this.product}}
+            <article class="cart-item-card" data-pid="{{this.product._id}}">
+              <div class="cart-item-info">
+                <span class="cart-item-category">{{this.product.category}}</span>
+                <h3 class="cart-item-title">{{this.product.title}}</h3>
+                <span class="cart-item-code">Código: {{this.product.code}}</span>
+              </div>
+              <div class="cart-item-pricing">
+                <span class="cart-item-unit-price"><strong>Precio:</strong> ${{this.product.price}}</span>
+                <span class="cart-item-qty"><strong>Cant:</strong> {{this.quantity}} u.</span>
+                <span class="cart-item-subtotal"><strong>Subtotal:</strong> ${{this.subtotal}}</span>
+              </div>
+              <button class="btn-remove-item" data-pid="{{this.product._id}}">✕</button>
+            </article>
+          {{/if}}
+        {{/each}}
+      </div>
+
+      <!-- Order Summary Card -->
+      <aside class="cart-summary-section">
+        <div class="summary-card">
+          <h3>Resumen del Pedido</h3>
+          <hr class="summary-divider">
+          <div class="summary-row">
+            <span>ID del Carrito:</span>
+            <span class="cart-id-text">{{cartId}}</span>
+          </div>
+          <div class="summary-row total-row">
+            <span>Total a Pagar:</span>
+            <span class="cart-total-price">${{total}}</span>
+          </div>
+          <button class="btn btn-primary btn-checkout" onclick="alert('¡Compra simulada con éxito!')">
+            Proceder al Pago
+          </button>
+          <button class="btn btn-danger btn-clear-cart" id="clear-cart-btn">
+            Vaciar Carrito
+          </button>
+        </div>
+      </aside>
+    </div>
+  {{else}}
+    <div class="empty-state">
+      <span class="empty-icon">🛒</span>
+      <h3>Tu carrito está vacío</h3>
+      <p>Explora nuestro catálogo y agrega productos a tu orden para verlos reflejados aquí.</p>
+      <a href="/products" class="btn btn-primary">Ir al Catálogo</a>
+    </div>
+  {{/if}}
+</div>
+
+<script>
+  // Simple client-side javascript to handle removing single item and clearing the entire cart
+  const cartId = "{{cartId}}";
+
+  // Handle clear cart button
+  const clearCartBtn = document.getElementById('clear-cart-btn');
+  if (clearCartBtn) {
+    clearCartBtn.addEventListener('click', async () => {
+      if (confirm('¿Estás seguro de que deseas vaciar tu carrito?')) {
+        try {
+          const response = await fetch(`/api/carts/${cartId}`, {
+            method: 'DELETE'
+          });
+          const result = await response.json();
+          if (result.status === 'success') {
+            window.location.reload();
+          } else {
+            alert('Error al vaciar el carrito: ' + result.message);
+          }
+        } catch (error) {
+          alert('Error de red: ' + error.message);
+        }
+      }
+    });
+  }
+
+  // Handle single item deletion button
+  document.querySelectorAll('.btn-remove-item').forEach(button => {
+    button.addEventListener('click', async (e) => {
+      const pid = e.target.getAttribute('data-pid');
+      if (confirm('¿Deseas quitar este producto del carrito?')) {
+        try {
+          const response = await fetch(`/api/carts/${cartId}/products/${pid}`, {
+            method: 'DELETE'
+          });
+          const result = await response.json();
+          if (result.status === 'success') {
+            window.location.reload();
+          } else {
+            alert('Error al eliminar producto: ' + result.message);
+          }
+        } catch (error) {
+          alert('Error de red: ' + error.message);
+        }
+      }
+    });
+  });
+</script>

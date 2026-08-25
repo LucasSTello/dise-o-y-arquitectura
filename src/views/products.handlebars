@@ -1,0 +1,106 @@
+<section class="page-header">
+  <h1>Catálogo de Productos</h1>
+  <p class="subtitle">Descubre nuestra variedad de productos premium con paginación avanzada.</p>
+</section>
+
+<!-- Filters and Sorting Bar -->
+<div class="catalog-filters-bar">
+  <form action="/products" method="GET" class="filter-form">
+    <div class="filter-group">
+      <label for="query">Filtrar:</label>
+      <input type="text" id="query" name="query" placeholder="Categoría o Estado..." value="{{filters.query}}">
+    </div>
+    
+    <div class="filter-group">
+      <label for="sort">Ordenar por precio:</label>
+      <select id="sort" name="sort">
+        <option value="">Ninguno</option>
+        <option value="asc" {{#if (eq filters.sort "asc")}}selected{{/if}}>Menor a Mayor</option>
+        <option value="desc" {{#if (eq filters.sort "desc")}}selected{{/if}}>Mayor a Menor</option>
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <label for="limit">Límite:</label>
+      <select id="limit" name="limit">
+        <option value="5" {{#if (eq filters.limit 5)}}selected{{/if}}>5</option>
+        <option value="10" {{#if (eq filters.limit 10)}}selected{{/if}}>10</option>
+        <option value="20" {{#if (eq filters.limit 20)}}selected{{/if}}>20</option>
+      </select>
+    </div>
+
+    <button type="submit" class="btn btn-secondary">Aplicar Filtros</button>
+    <a href="/products" class="btn btn-link">Limpiar Filtros</a>
+  </form>
+</div>
+
+{{#if error}}
+  <div class="alert alert-error">
+    <p>{{error}}</p>
+  </div>
+{{/if}}
+
+<!-- Toast notification for adding to cart -->
+<div id="cart-toast" class="toast"></div>
+
+<!-- Products Grid -->
+{{#if products.length}}
+  <div class="products-grid">
+    {{#each products}}
+      <article class="product-card" data-id="{{this._id}}">
+        <div class="card-header">
+          <span class="category-badge">{{this.category}}</span>
+          {{#if this.stock}}
+            <span class="stock-badge in-stock">En Stock ({{this.stock}})</span>
+          {{else}}
+            <span class="stock-badge out-stock">Agotado</span>
+          {{/if}}
+        </div>
+        <div class="card-body">
+          <h3 class="product-title">{{this.title}}</h3>
+          <p class="product-description">{{this.description}}</p>
+          <div class="product-meta">
+            <span class="meta-item"><strong>Código:</strong> {{this.code}}</span>
+          </div>
+        </div>
+        <div class="card-footer">
+          <span class="product-price">${{this.price}}</span>
+          {{#if this.stock}}
+            <button class="btn btn-primary add-to-cart-btn" data-id="{{this._id}}">
+              <span class="btn-icon">🛒</span> Comprar
+            </button>
+          {{else}}
+            <button class="btn btn-secondary" disabled>Agotado</button>
+          {{/if}}
+        </div>
+      </article>
+    {{/each}}
+  </div>
+
+  <!-- Pagination Controls -->
+  <div class="pagination-container">
+    {{#if pagination.hasPrevPage}}
+      <a href="{{pagination.prevLink}}" class="pagination-btn prev-btn">← Anterior</a>
+    {{else}}
+      <span class="pagination-btn disabled">← Anterior</span>
+    {{/if}}
+
+    <span class="page-info">Página <strong>{{pagination.page}}</strong> de <strong>{{pagination.totalPages}}</strong></span>
+
+    {{#if pagination.hasNextPage}}
+      <a href="{{pagination.nextLink}}" class="pagination-btn next-btn">Siguiente →</a>
+    {{else}}
+      <span class="pagination-btn disabled">Siguiente →</span>
+    {{/if}}
+  </div>
+
+{{else}}
+  <div class="empty-state">
+    <span class="empty-icon">📦</span>
+    <h3>No hay productos registrados</h3>
+    <p>No se encontraron productos que coincidan con la búsqueda actual.</p>
+  </div>
+{{/if}}
+
+<!-- Client Script for Add to Cart -->
+<script src="/js/products.js"></script>
